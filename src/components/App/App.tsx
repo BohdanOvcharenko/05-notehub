@@ -6,6 +6,8 @@ import { useState } from 'react';
 import Pagination from '../Pagination/Pagination.tsx';
 import { useDebouncedCallback } from 'use-debounce';
 import SearchBox from '../SearchBox/SearchBox';
+import Modal from '../Modal/Modal';
+import NoteForm from '../NoteForm/NoteForm';
 
 
 
@@ -13,6 +15,15 @@ function App() {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+const closeModal = () => {
+  setIsModalOpen(false);
+};
 
   const { data, isLoading, isError } = useQuery({
   queryKey: ['notes', page, search],
@@ -23,12 +34,15 @@ function App() {
   const notes = data?.notes ?? [];
   const totalPages = data?.totalPages ?? 0;
 
-  const debouncedSearch = useDebouncedCallback(
-  (value: string) => {
-    setSearch(value);
-  },
-  1000
-);
+  const debouncedSearch =
+  useDebouncedCallback(
+    (value: string) => {
+      setSearch(value);
+
+      setPage(1);
+    },
+    1000
+  );
 
   return (  
    
@@ -42,7 +56,9 @@ function App() {
           onPageChange={setPage}
         />
       )}
-		<button className={css.button}>Create note +</button>
+		<button className={css.button} onClick={openModal}>
+  Create note +
+    </button>
         </header>
         {isLoading && <p>loading...</p>}
 
@@ -51,6 +67,12 @@ function App() {
         <NoteList notes={notes}
 />
       )}
+
+      {isModalOpen && (
+  <Modal onClose={closeModal}>
+    <NoteForm onClose={closeModal} />
+  </Modal>
+)}
 </div>
     
   )
