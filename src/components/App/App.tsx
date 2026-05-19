@@ -30,7 +30,7 @@ function App() {
 
   const { data, isLoading, isError } = useQuery({
   queryKey: ['notes', page, search],
-    queryFn: () => fetchNotes({ page: 1, search: '' }),
+    queryFn: () => fetchNotes({ page, search }),
   });
   
   const notes = data?.notes ?? [];
@@ -44,7 +44,7 @@ function App() {
 );
 
   return (  
-    <>
+   
         <div className={css.app}>
 	<header className={css.toolbar}>
 		<SearchBox onSearch={debouncedSearch} />
@@ -67,7 +67,7 @@ function App() {
 />
       )}
 </div>
-    </>
+    
   )
 }
 
