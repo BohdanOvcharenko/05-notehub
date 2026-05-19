@@ -11,18 +11,30 @@ interface ModalProps {
 
 function Modal({ children, onClose }: ModalProps) {
   useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
+  const handleEscape = (
+    event: KeyboardEvent
+  ) => {
+    if (event.key === 'Escape') {
+      onClose();
+    }
+  };
 
-    window.addEventListener('keydown', handleEscape);
+  document.body.style.overflow = 'hidden';
 
-    return () => {
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [onClose]);
+  window.addEventListener(
+    'keydown',
+    handleEscape
+  );
+
+  return () => {
+    document.body.style.overflow = '';
+
+    window.removeEventListener(
+      'keydown',
+      handleEscape
+    );
+  };
+}, [onClose]);
 
     return createPortal(
         <div
